@@ -1,6 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
-const path = require('path')
+const path = require('path');
 
 let styleFolder = '05-merge-styles/styles';
 let fileDist = '05-merge-styles/project-dist/bundle.css';
