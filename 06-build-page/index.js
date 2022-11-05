@@ -19,10 +19,6 @@ fs.mkdir(newFolder, { recursive: true }, (err) => {
     if (err) throw err;
 });
 
-/*fs.mkdir(assetsDist, { recursive: true }, (err) => {
-  if (err) throw err;
-});*/
-
 
 fs.promises.readFile("06-build-page/template.html", 'utf-8')
 .then(function(templateContentStr) {
@@ -31,7 +27,7 @@ fs.promises.readFile("06-build-page/template.html", 'utf-8')
         let posEnd = templateContentStr.indexOf("}}");
         let tag = templateContentStr.substring(posBegin, posEnd);
         let templateContentStr2 = templateContentStr.slice(posEnd + 2) ;
-        let templateContentStr1 = templateContentStr.slice(0, posBegin - 3);
+        let templateContentStr1 = templateContentStr.slice(0, posBegin - 2);
         templateContentStr = templateContentStr1 + templateContentStr2;
         dataArray.push(tag);
         dataArray.push(posBegin);
