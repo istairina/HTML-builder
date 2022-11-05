@@ -14,12 +14,12 @@ let dataArray = [];
 let componentArray = [];
 let resultArray = [];
 
-
+//create destination folder for build
 fs.mkdir(newFolder, { recursive: true }, (err) => {
     if (err) throw err;
 });
 
-
+//creatr html-file with all components
 fs.promises.readFile("06-build-page/template.html", 'utf-8')
 .then(function(templateContentStr) {
     while (templateContentStr.indexOf("{{") !== -1) {
@@ -61,7 +61,7 @@ fs.promises.readFile("06-build-page/template.html", 'utf-8')
 
 })
 
-
+//create css file with all styles
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -82,6 +82,7 @@ fs.readdir(styleFolder, {withFileTypes: true}, (err, file) => {
 rl.close();
 
 
+//create copy of assets folder
 fs.promises.rm(assetsDist, {recursive: true, force: true})
 .then (function() {
   fs.mkdir(assetsDist, { recursive: true }, (err) => {
@@ -98,8 +99,6 @@ fs.promises.rm(assetsDist, {recursive: true, force: true})
     if (file[i].isFile()) {
       fs.createReadStream(`${assetsFolder}/${file[i]['name']}`).pipe(fs.createWriteStream(`${assetsDist}/${file[i]['name']}`));
     } else {
-      //console.log("create folder " + file[i]['name']);
-
       let assetsInsideFolder = `${assetsFolder}/${file[i]['name']}`;
       let assetsInsideDist = `${assetsDist}/${file[i]['name']}`;
       fs.mkdir(assetsInsideDist, { recursive: true }, (err) => {
