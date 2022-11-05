@@ -83,16 +83,8 @@ rl.close();
 
 
 //create copy of assets folder
-fs.promises.rm(assetsDist, {recursive: true, force: true})
-.then (function() {
-  fs.mkdir(assetsDist, { recursive: true }, (err) => {
-    //console.log("delete");
-    if (err) throw err;
-  });
-})
 
-
-.then (function() {
+function copyFolder(assetsFolder, assetsDist) {
   fs.readdir(assetsFolder, {withFileTypes: true}, (err, file) => {
     if (err) console.log(err);
   for (let i = 0; i < file.length; i++) {
@@ -105,15 +97,22 @@ fs.promises.rm(assetsDist, {recursive: true, force: true})
         if (err) throw err;
       });
 
-      fs.readdir(assetsInsideFolder, {withFileTypes: true}, (err, file) => {
-        if (err) console.log(err);
-        for (let k = 0; k < file.length; k++) {
-          if (file[i].isFile()) {
-            fs.createReadStream(`${assetsInsideFolder}/${file[k]['name']}`).pipe(fs.createWriteStream(`${assetsInsideDist}/${file[k]['name']}`));
-          }
-        }
-        })
+      copyFolder(`${assetsFolder}/${file[i]['name']}`, assetsInsideDist);
       }
   }
 })
+}
+
+
+fs.promises.rm(assetsDist, {recursive: true, force: true})
+.then (function() {
+  fs.mkdir(assetsDist, { recursive: true }, (err) => {
+    //console.log("delete");
+    if (err) throw err;
+  });
+})
+
+
+.then (function() {
+  copyFolder(assetsFolder, assetsDist);
 })
