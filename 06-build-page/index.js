@@ -2,10 +2,14 @@ const fs = require('fs');
 const { readFile } = require('fs/promises');
 const readline = require('readline');
 const path = require('path');
-//const fsPromises = require('fs').promises;
+const fsPromises = require('fs').promises;
 
 let newFolder = "06-build-page/project-dist";
-let newAssets = "06-build-page/project-dist/assets"
+let styleFolder = '06-build-page/styles';
+let styleDist = '06-build-page/project-dist/style.css';
+let assetsFolder = "06-build-page/assets";
+let assetsDist = "06-build-page/project-dist/assets";
+
 let dataArray = [];
 let componentArray = [];
 let resultArray = [];
@@ -15,9 +19,9 @@ fs.mkdir(newFolder, { recursive: true }, (err) => {
     if (err) throw err;
 });
 
-fs.mkdir(newAssets, { recursive: true }, (err) => {
+/*fs.mkdir(assetsDist, { recursive: true }, (err) => {
   if (err) throw err;
-});
+});*/
 
 
 fs.promises.readFile("06-build-page/template.html", 'utf-8')
@@ -62,11 +66,6 @@ fs.promises.readFile("06-build-page/template.html", 'utf-8')
 })
 
 
-
-
-let styleFolder = '06-build-page/styles';
-let styleDist = '06-build-page/project-dist/style.css';
-
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -85,3 +84,41 @@ fs.readdir(styleFolder, {withFileTypes: true}, (err, file) => {
 });
 
 rl.close();
+
+
+fs.promises.rm(assetsDist, {recursive: true, force: true})
+.then (function() {
+  fs.mkdir(assetsDist, { recursive: true }, (err) => {
+    //console.log("delete");
+    if (err) throw err;
+  });
+})
+
+
+.then (function() {
+  fs.readdir(assetsFolder, {withFileTypes: true}, (err, file) => {
+    if (err) console.log(err);
+  for (let i = 0; i < file.length; i++) {
+    if (file[i].isFile()) {
+      fs.createReadStream(`${assetsFolder}/${file[i]['name']}`).pipe(fs.createWriteStream(`${assetsDist}/${file[i]['name']}`));
+    } else {
+      //console.log("create folder " + file[i]['name']);
+
+      let assetsInsideFolder = `${assetsFolder}/${file[i]['name']}`;
+      let assetsInsideDist = `${assetsDist}/${file[i]['name']}`;
+      fs.mkdir(assetsInsideDist, { recursive: true }, (err) => {
+        if (err) throw err;
+      });
+
+      fs.readdir(assetsInsideFolder, {withFileTypes: true}, (err, file) => {
+        if (err) console.log(err);
+        for (let k = 0; k < file.length; k++) {
+          if (file[i].isFile()) {
+            fs.createReadStream(`${assetsInsideFolder}/${file[k]['name']}`).pipe(fs.createWriteStream(`${assetsInsideDist}/${file[k]['name']}`));
+          }
+        }
+        })
+      }
+  }
+})
+})
