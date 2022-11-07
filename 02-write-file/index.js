@@ -8,7 +8,7 @@ let rl = readline.createInterface({
 
 let writeText = function (answer) {
 
-  if (answer == 'exit') {
+  if (answer.includes('exit')) {
     console.log('Bye-bye! Come back soon');
     rl.close();
   } else {
