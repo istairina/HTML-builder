@@ -21,6 +21,12 @@ let writeText = function (answer) {
   }
 }
 
+
+fs.open('02-write-file/output.txt', 'w', (err) => {
+    if(err) throw err;
+});
+
+
 rl.question('What is your favorite city?\n', (answer) => {
   writeText(answer);
   rl.on('line', (answer) => {
